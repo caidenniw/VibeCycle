@@ -1,6 +1,6 @@
 {
   "name": "VibeCycle",
   "description": "Asisten pengelolaan sampah ramah dan kreatif dengan bantuan AI.",
-  "requestFramePermissions": ["camera"],
+  "requestFramePermissions": ["camera", "geolocation"],
   "majorCapabilities": []
 }
