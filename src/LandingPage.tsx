@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
 import { Leaf, Cpu, BarChart3, Droplets, ChevronRight, Sparkles, Activity } from 'lucide-react';
+import DarkModeToggle from './DarkModeToggle';
 
 interface LandingPageProps {
   onStart: () => void;
@@ -50,31 +51,34 @@ export default function LandingPage({ onStart }: LandingPageProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-sans selection:bg-emerald-500 selection:text-white">
       {/* Sticky Navbar */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-xl border-b border-emerald-950/5 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-xl border-b border-emerald-950/5 dark:border-white/10 py-4 shadow-sm' : 'bg-transparent py-6'}`}>
         <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-950 flex items-center justify-center shadow-lg shadow-emerald-900/20">
+            <div className="w-10 h-10 rounded-full bg-emerald-950 dark:bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-900/20">
               <Leaf className="w-5 h-5 text-emerald-400" />
             </div>
-            <span className={`text-xl font-bold tracking-tight transition-colors ${isScrolled ? 'text-emerald-950' : 'text-emerald-950'}`}>VibeCycle</span>
+            <span className={`text-xl font-bold tracking-tight transition-colors ${isScrolled ? 'text-emerald-950 dark:text-emerald-50' : 'text-emerald-950 dark:text-emerald-50'}`}>VibeCycle</span>
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onStart}
-            className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-950 text-white font-black text-xs uppercase tracking-widest hover:shadow-xl hover:shadow-emerald-900/20 transition-all"
-          >
-            Mulai Sekarang
-          </motion.button>
+          <div className="flex items-center gap-4">
+            <DarkModeToggle />
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onStart}
+              className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-950 dark:bg-emerald-600 text-white font-black text-xs uppercase tracking-widest hover:shadow-xl hover:shadow-emerald-900/20 transition-all"
+            >
+              Mulai Sekarang
+            </motion.button>
+          </div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="relative lg:min-h-screen flex items-center pt-32 pb-16 lg:pb-0 overflow-hidden">
         {/* Background Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-white to-slate-100 -z-20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 dark:from-slate-900 via-white dark:via-slate-800 to-slate-100 dark:to-slate-950 -z-20" />
         <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-emerald-200/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob" />
         <div className="absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] bg-teal-200/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000" />
         
@@ -86,15 +90,15 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             className="space-y-8 text-center lg:text-left pt-12 lg:pt-0"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-950/10 bg-white/50 backdrop-blur-sm self-center lg:self-start">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-800">The Green Gateway</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-emerald-950 leading-[1.1] tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-bold text-emerald-950 dark:text-emerald-50 leading-[1.1] tracking-tight">
               Beri Peluang Baru Untuk <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 italic font-serif pr-4">Semesta.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               Ubah limbah menjadi karya bermakna dengan bantuan AI dan Analisis Cerdas. Transformasi limbah menjadi karya, satu langkah kecil untuk bumi yang lebih baik.
             </p>
             
@@ -102,7 +106,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onStart}
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 sm:px-10 sm:py-5 rounded-full bg-emerald-950 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_40px_-10px_rgba(4,47,46,0.5)] hover:shadow-[0_0_60px_-15px_rgba(4,47,46,0.6)] transition-all group"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 sm:px-10 sm:py-5 rounded-full bg-emerald-950 dark:bg-emerald-600 text-white font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_40px_-10px_rgba(4,47,46,0.5)] hover:shadow-[0_0_60px_-15px_rgba(4,47,46,0.6)] transition-all group"
             >
               Mulai Analisis
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -148,7 +152,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   rotateX: [0, 10, 0]
                 }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-4 right-4 sm:bottom-1/4 sm:right-1/4 w-32 h-32 sm:w-56 sm:h-56 bg-emerald-950/90 border border-emerald-800/50 backdrop-blur-2xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30"
+                className="absolute bottom-4 right-4 sm:bottom-1/4 sm:right-1/4 w-32 h-32 sm:w-56 sm:h-56 bg-emerald-950 dark:bg-emerald-600/90 border border-emerald-800/50 backdrop-blur-2xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30"
               >
                 <Sparkles className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400" />
                 <div className="text-emerald-100/80 text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] text-center px-4">
@@ -175,7 +179,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-center text-sm sm:text-base font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-600 mb-12"
+              className="text-center text-sm sm:text-base font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-emerald-600 dark:text-emerald-400 mb-12"
             >
               Bumi Butuh Tindakan Nyata
             </motion.p>
@@ -190,8 +194,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 <div className="w-14 h-14 rounded-full bg-red-50 text-red-500 flex items-center justify-center border border-red-100">
                   <Activity className="w-6 h-6" />
                 </div>
-                <div className="text-4xl md:text-5xl font-bold text-emerald-950 font-serif"><CountUp end={8} /> Juta</div>
-                <div className="text-sm font-bold text-slate-500 uppercase tracking-widest leading-loose">Ton Plastik Ke Laut Setiap Tahun</div>
+                <div className="text-4xl md:text-5xl font-bold text-emerald-950 dark:text-emerald-50 font-serif"><CountUp end={8} /> Juta</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-loose">Ton Plastik Ke Laut Setiap Tahun</div>
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -200,11 +204,11 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
                 className="flex flex-col items-center text-center space-y-4 pt-8 md:pt-0"
               >
-                <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+                <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-950 dark:bg-emerald-600/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center border border-emerald-100 dark:border-emerald-900/50">
                   <Leaf className="w-6 h-6" />
                 </div>
-                <div className="text-4xl md:text-5xl font-bold text-emerald-950 font-serif"><CountUp end={450} /> Tahun</div>
-                <div className="text-sm font-bold text-slate-500 uppercase tracking-widest leading-loose">Waktu Urai Botol Plastik</div>
+                <div className="text-4xl md:text-5xl font-bold text-emerald-950 dark:text-emerald-50 font-serif"><CountUp end={450} /> Tahun</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-loose">Waktu Urai Botol Plastik</div>
               </motion.div>
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -216,8 +220,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 <div className="w-14 h-14 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center border border-blue-100">
                   <Droplets className="w-6 h-6" />
                 </div>
-                <div className="text-4xl md:text-5xl font-bold text-emerald-950 font-serif"><CountUp end={30} />%</div>
-                <div className="text-sm font-bold text-slate-500 uppercase tracking-widest leading-loose">Target Pengurangan Sampah Nas</div>
+                <div className="text-4xl md:text-5xl font-bold text-emerald-950 dark:text-emerald-50 font-serif"><CountUp end={30} />%</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest leading-loose">Target Pengurangan Sampah Nas</div>
               </motion.div>
             </div>
           </motion.div>
@@ -225,7 +229,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </section>
 
       {/* Feature Showcase */}
-      <section className="py-24 relative overflow-hidden bg-slate-50">
+      <section className="py-24 relative overflow-hidden bg-slate-50 dark:bg-slate-900">
         <div className="container mx-auto px-6 md:px-12 space-y-32">
           
           <motion.div 
@@ -235,8 +239,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center max-w-2xl mx-auto space-y-4"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-emerald-950 font-serif italic">Kenapa VibeCycle?</h2>
-            <p className="text-lg text-slate-600">Teknologi mutakhir untuk masa depan yang lebih hijau, dirancang khusus untuk memandu langkah kecilmu.</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-emerald-950 dark:text-emerald-50 font-serif italic">Kenapa VibeCycle?</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300">Teknologi mutakhir untuk masa depan yang lebih hijau, dirancang khusus untuk memandu langkah kecilmu.</p>
           </motion.div>
 
           <div className="space-y-24">
@@ -248,16 +252,16 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               transition={{ duration: 0.7 }}
               className="grid md:grid-cols-2 gap-12 items-center"
             >
-              <div className="order-2 md:order-1 bg-white p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
-                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 dark:from-emerald-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                  <Cpu className="w-32 h-32 text-emerald-200 group-hover:text-emerald-400 transition-colors duration-700 group-hover:scale-110" />
               </div>
               <div className="order-1 md:order-2 space-y-6">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                   <Cpu className="w-6 h-6" />
                 </div>
-                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950">AI Detection</h3>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950 dark:text-emerald-50">AI Detection</h3>
+                <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   Deteksi sampah secepat kilat. Sistem AI kami dapat mengenali berbagai jenis limbah mulai dari plastik, organik, hingga B3 hanya dari sebuah foto.
                 </p>
               </div>
@@ -275,12 +279,12 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center">
                   <BarChart3 className="w-6 h-6" />
                 </div>
-                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950">SAW Method</h3>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950 dark:text-emerald-50">SAW Method</h3>
+                <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   Rekomendasi objektif berdasarkan kriteria terbaik. Algoritma <i>Simple Additive Weighting</i> kami memprioritaskan ide upcycle berdasarkan kreativitas, nilai jual, dan kemudahan.
                 </p>
               </div>
-              <div className="bg-emerald-950 p-8 md:p-12 rounded-[3.5rem] shadow-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="bg-emerald-950 dark:bg-emerald-600 p-8 md:p-12 rounded-[3.5rem] shadow-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
                  <div className="absolute top-0 right-0 p-8 opacity-10 blur-xl group-hover:blur-md transition-all duration-700">
                     <Sparkles className="w-48 h-48 text-emerald-400" />
                  </div>
@@ -299,8 +303,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               transition={{ duration: 0.7 }}
               className="grid md:grid-cols-2 gap-12 items-center"
             >
-              <div className="order-2 md:order-1 bg-white p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
-                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50 dark:from-slate-700/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                  <div className="flex gap-4">
                     <Leaf className="w-16 h-16 text-emerald-300 group-hover:text-emerald-500 -rotate-12 transition-all duration-700" />
                     <Droplets className="w-16 h-16 text-blue-300 group-hover:text-blue-500 translate-y-4 rotate-12 transition-all duration-700" />
@@ -310,8 +314,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                 <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center">
                   <Leaf className="w-6 h-6" />
                 </div>
-                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950">Eco-Impact Dashboard</h3>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <h3 className="text-3xl lg:text-4xl font-bold text-emerald-950 dark:text-emerald-50">Eco-Impact Dashboard</h3>
+                <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   Pantau kontribusimu untuk bumi. Lihat langsung estimasi liter air yang dihemat, emisi karbon yang dikurangi, dan limbah yang direduksi dari setiap karyamu.
                 </p>
               </div>
@@ -322,7 +326,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </section>
 
       {/* Footer CTA */}
-      <section className="py-24 relative overflow-hidden bg-emerald-950 text-center px-6">
+      <section className="py-24 relative overflow-hidden bg-emerald-950 dark:bg-emerald-600 text-center px-6">
          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
          <motion.div 
             initial={{ opacity: 0, y: 40 }}
@@ -337,7 +341,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onStart}
-              className="mt-8 px-12 py-5 rounded-full bg-white text-emerald-950 font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
+              className="mt-8 px-12 py-5 rounded-full bg-white dark:bg-slate-800 text-emerald-950 dark:text-emerald-50 font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
             >
               Mulai Analisis
             </motion.button>
