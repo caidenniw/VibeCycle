@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'motion/react';
+import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionValueEvent, useSpring } from 'motion/react';
 import { Leaf, Cpu, BarChart3, Droplets, ChevronRight, Sparkles, Activity } from 'lucide-react';
 import DarkModeToggle from './DarkModeToggle';
+
+// Asset Fallbacks (Replace these with your local imports when files are in src/assets)
+import cardImg from './assets/card.png'; // Waste
+import sawImg from './assets/cardsawmethod.png'; // Data/SAW
+import impactImg from './assets/ecoimpact.png'; // Eco
+import resultImg from './assets/hasilkerajinan.png'; // Upcycled Art
+import scanImg from './assets/masukkan_botol.png'; // AI/Tech
+import insightImg from './assets/bohlam.png'; // eco insight
 
 interface LandingPageProps {
   onStart: () => void;
@@ -39,8 +47,57 @@ const CountUp = ({ end, duration = 2.5 }: { end: number; duration?: number }) =>
 
 export default function LandingPage({ onStart }: LandingPageProps) {
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 100], [1, 0]);
-  const y = useTransform(scrollY, [0, 100], [0, 50]);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Detect active scrolling to pause floating animations
+  useMotionValueEvent(scrollY, "change", () => {
+    setIsScrolling(true);
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    scrollTimeout.current = setTimeout(() => {
+      setIsScrolling(false);
+    }, 150); // Pause animation for 150ms after scroll stops
+  });
+
+  // Adjust transform to be much further down so it doesn't disappear on single-column mobile view
+  const y = useTransform(scrollY, [0, 800], [0, 100]);
+
+  // Scroll Scattering Transforms (0-500px for smoother transition)
+  const scatterRange = [0, 500];
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  
+  // Card 1: Plastic Waste
+  const card1XRaw = useTransform(scrollY, scatterRange, ["35%", "0%"]);
+  const card1YRaw = useTransform(scrollY, scatterRange, ["35%", "0%"]);
+  const card1ScaleRaw = useTransform(scrollY, scatterRange, [0.85, 1]);
+  const card1RotateRaw = useTransform(scrollY, scatterRange, [-5, 0]);
+
+  const card1X = useSpring(card1XRaw, springConfig);
+  const card1Y = useSpring(card1YRaw, springConfig);
+  const card1Scale = useSpring(card1ScaleRaw, springConfig);
+  const card1RotateCluster = useSpring(card1RotateRaw, springConfig);
+
+  // Card 2: Eco Insights
+  const card2XRaw = useTransform(scrollY, scatterRange, ["-35%", "0%"]);
+  const card2YRaw = useTransform(scrollY, scatterRange, ["30%", "0%"]);
+  const card2ScaleRaw = useTransform(scrollY, scatterRange, [0.8, 1]);
+  const card2RotateRaw = useTransform(scrollY, scatterRange, [5, 0]);
+
+  const card2X = useSpring(card2XRaw, springConfig);
+  const card2Y = useSpring(card2YRaw, springConfig);
+  const card2Scale = useSpring(card2ScaleRaw, springConfig);
+  const card2RotateCluster = useSpring(card2RotateRaw, springConfig);
+
+  // Card 3: Eco Art Piece
+  const card3XRaw = useTransform(scrollY, scatterRange, ["-30%", "0%"]);
+  const card3YRaw = useTransform(scrollY, scatterRange, ["-45%", "0%"]);
+  const card3ScaleRaw = useTransform(scrollY, scatterRange, [0.75, 1]);
+  const card3RotateRaw = useTransform(scrollY, scatterRange, [10, 5]);
+
+  const card3X = useSpring(card3XRaw, springConfig);
+  const card3YScatter = useSpring(card3YRaw, springConfig);
+  const card3Scale = useSpring(card3ScaleRaw, springConfig);
+  const card3Rotate = useSpring(card3RotateRaw, springConfig);
   
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -76,11 +133,14 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative lg:min-h-screen flex items-center pt-32 pb-16 lg:pb-0 overflow-hidden">
+      <section className="relative lg:min-h-screen flex items-center pt-32 pb-32 md:pb-48 lg:pb-0 overflow-hidden">
         {/* Background Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 dark:from-slate-900 via-white dark:via-slate-800 to-slate-100 dark:to-slate-950 -z-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 dark:from-slate-900 via-white dark:via-slate-800 to-slate-50 dark:to-slate-900 -z-20" />
         <div className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-emerald-200/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob" />
         <div className="absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] bg-teal-200/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000" />
+        
+        {/* Bottom Fade Mask */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-50 dark:from-slate-900 to-transparent z-10 pointer-events-none" />
         
         <div className="container mx-auto px-6 md:px-12 relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <motion.div 
@@ -114,23 +174,41 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           </motion.div>
 
           {/* Hero Visual - Floating abstract glassmorphism elements representing transform */}
-          <div className="relative h-[200px] md:h-[400px] lg:h-[600px] w-full mt-8 lg:mt-0 perspective-1000">
+          <div className="relative h-[420px] sm:h-[500px] md:h-[550px] lg:h-[650px] w-full mt-12 lg:mt-0 perspective-1000">
             <motion.div 
-              style={{ y, opacity }}
+              style={{ y }}
               className="absolute inset-0 flex items-center justify-center"
             >
               {/* Bottle / Waste representation */}
               <motion.div 
-                animate={{ 
+                style={{ x: card1X, y: card1Y, scale: card1Scale, rotateZ: card1RotateCluster }}
+                animate={!isScrolling ? { 
                   y: [-10, 10, -10],
-                  rotateZ: [-5, 5, -5],
-                  rotateY: [0, 10, 0]
-                }}
+                  rotateZ: [-3, 3, -3],
+                } : {}}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-0 left-4 sm:top-1/4 sm:left-1/4 w-24 h-36 sm:w-40 sm:h-60 bg-white/40 border border-white/60 backdrop-blur-xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex items-center justify-center z-10"
+                className="absolute top-0 left-0 sm:top-[12%] sm:left-[8%] w-[120px] h-[170px] sm:w-52 sm:h-72 bg-white/40 border border-white/60 backdrop-blur-xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex items-center justify-center z-20 overflow-hidden"
               >
-                <div className="text-emerald-900/40 text-[8px] sm:text-xs font-black uppercase tracking-widest text-center px-2 sm:px-4">
+                <img src={cardImg} alt="Plastic Waste" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <div className="relative z-10 text-emerald-900/40 text-[10px] sm:text-xs font-black uppercase tracking-widest text-center px-2 sm:px-4">
                   Plastic<br/>Waste
+                </div>
+              </motion.div>
+
+              {/* Middle / Secondary card representing analysis/impact */}
+              <motion.div 
+                style={{ x: card2X, y: card2Y, scale: card2Scale, rotateZ: card2RotateCluster }}
+                animate={!isScrolling ? { 
+                  y: [-12, 12, -12],
+                  rotateZ: [2, -2, 2],
+                } : {}}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-8 right-0 sm:top-[8%] sm:right-[18%] w-[110px] h-[160px] sm:w-48 sm:h-64 bg-white/10 border border-white/30 backdrop-blur-lg rounded-2xl sm:rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center gap-1 z-10 overflow-hidden"
+              >
+                <img src={insightImg} alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <Activity className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400 relative z-10 block" />
+                <div className="relative z-10 text-white text-[8px] sm:text-xs font-black uppercase tracking-[0.2em] text-center px-1">
+                  Eco<br/>Insights
                 </div>
               </motion.div>
 
@@ -146,17 +224,20 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
               {/* Upcycled representation */}
               <motion.div 
-                animate={{ 
+                style={{ x: card3X, y: card3YScatter, scale: card3Scale, rotateZ: card3Rotate }}
+                animate={!isScrolling ? { 
                   y: [10, -10, 10],
-                  rotateZ: [5, -5, 5],
-                  rotateX: [0, 10, 0]
-                }}
+                  rotateZ: [2, -2, 2],
+                } : {}}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-4 right-4 sm:bottom-1/4 sm:right-1/4 w-32 h-32 sm:w-56 sm:h-56 bg-emerald-950 dark:bg-emerald-600/90 border border-emerald-800/50 backdrop-blur-2xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30"
+                className="absolute bottom-4 right-0 sm:bottom-[15%] sm:right-[6%] w-[180px] h-[180px] sm:w-80 sm:h-80 bg-emerald-950 dark:bg-emerald-600/90 border border-emerald-800/50 backdrop-blur-2xl rounded-3xl sm:rounded-[3.5rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30 overflow-hidden"
               >
-                <Sparkles className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400" />
-                <div className="text-emerald-100/80 text-[10px] sm:text-sm font-black uppercase tracking-[0.2em] text-center px-4">
-                  Eco Art<br/>Piece
+                <img src={resultImg} alt="Eco Art Piece" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+                <div className="relative z-10 flex flex-col items-center gap-2">
+                  <Sparkles className="w-10 h-10 sm:w-16 sm:h-16 text-emerald-400" />
+                  <div className="text-emerald-50 text-xs sm:text-lg font-black uppercase tracking-[0.2em] text-center px-4 drop-shadow-xl">
+                    Eco Art<br/>Piece
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -252,9 +333,10 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               transition={{ duration: 0.7 }}
               className="grid md:grid-cols-2 gap-12 items-center"
             >
-              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-4 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                 <img src={scanImg} alt="AI Detection" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-60 transition-opacity duration-700" />
                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 dark:from-emerald-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                 <Cpu className="w-32 h-32 text-emerald-200 group-hover:text-emerald-400 transition-colors duration-700 group-hover:scale-110" />
+                 <Cpu className="w-24 h-24 text-emerald-200 group-hover:text-emerald-400 transition-colors duration-700 group-hover:scale-110 relative z-10" />
               </div>
               <div className="order-1 md:order-2 space-y-6">
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -284,7 +366,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   Rekomendasi objektif berdasarkan kriteria terbaik. Algoritma <i>Simple Additive Weighting</i> kami memprioritaskan ide upcycle berdasarkan kreativitas, nilai jual, dan kemudahan.
                 </p>
               </div>
-              <div className="bg-emerald-950 dark:bg-emerald-600 p-8 md:p-12 rounded-[3.5rem] shadow-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="bg-emerald-950 dark:bg-emerald-600 p-4 rounded-[3.5rem] shadow-2xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                 <img src={sawImg} alt="SAW Method" className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:opacity-50 transition-opacity duration-700" />
                  <div className="absolute top-0 right-0 p-8 opacity-10 blur-xl group-hover:blur-md transition-all duration-700">
                     <Sparkles className="w-48 h-48 text-emerald-400" />
                  </div>
@@ -303,9 +386,10 @@ export default function LandingPage({ onStart }: LandingPageProps) {
               transition={{ duration: 0.7 }}
               className="grid md:grid-cols-2 gap-12 items-center"
             >
-              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="order-2 md:order-1 bg-white dark:bg-slate-800 p-4 rounded-[3.5rem] border border-emerald-950/5 dark:border-white/10 shadow-2xl shadow-emerald-900/5 aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                 <img src={impactImg} alt="Eco Impact" className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:opacity-50 transition-opacity duration-700" />
                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-50 dark:from-slate-700/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                 <div className="flex gap-4">
+                 <div className="flex gap-4 relative z-10">
                     <Leaf className="w-16 h-16 text-emerald-300 group-hover:text-emerald-500 -rotate-12 transition-all duration-700" />
                     <Droplets className="w-16 h-16 text-blue-300 group-hover:text-blue-500 translate-y-4 rotate-12 transition-all duration-700" />
                  </div>
@@ -340,10 +424,10 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={onStart}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="mt-8 px-12 py-5 rounded-full bg-white dark:bg-slate-800 text-emerald-950 dark:text-emerald-50 font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
             >
-              Mulai Analisis
+              Kembali ke Atas
             </motion.button>
          </motion.div>
          {/* Decorative background blobs */}
