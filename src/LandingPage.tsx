@@ -62,8 +62,20 @@ export default function LandingPage({ onStart }: LandingPageProps) {
   // Adjust transform to be much further down so it doesn't disappear on single-column mobile view
   const y = useTransform(scrollY, [0, 800], [0, 100]);
 
-  // Scroll Scattering Transforms (0-500px for smoother transition)
-  const scatterRange = [0, 500];
+  // Dynamic scroll scattering range based on screen size
+  const [scatterRange, setScatterRange] = useState([0, 500]);
+
+  useEffect(() => {
+    const updateRange = () => {
+      const isMobile = window.innerWidth < 640; // sm breakpoint
+      setScatterRange(isMobile ? [250, 750] : [0, 500]);
+    };
+    
+    updateRange();
+    window.addEventListener('resize', updateRange);
+    return () => window.removeEventListener('resize', updateRange);
+  }, []);
+
   const springConfig = { stiffness: 90, damping: 25, mass: 0.8 };
   
   // Card 1: Plastic Waste
