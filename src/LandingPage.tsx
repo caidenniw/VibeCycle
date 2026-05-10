@@ -64,7 +64,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
 
   // Scroll Scattering Transforms (0-500px for smoother transition)
   const scatterRange = [0, 500];
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const springConfig = { stiffness: 90, damping: 25, mass: 0.8 };
   
   // Card 1: Plastic Waste
   const card1XRaw = useTransform(scrollY, scatterRange, ["35%", "0%"]);
@@ -187,7 +187,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   rotateZ: [-3, 3, -3],
                 } : {}}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-0 left-0 sm:top-[12%] sm:left-[8%] w-[120px] h-[170px] sm:w-52 sm:h-72 bg-white/40 border border-white/60 backdrop-blur-xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex items-center justify-center z-20 overflow-hidden"
+                className="absolute top-0 left-0 sm:top-[12%] sm:left-[8%] w-[120px] h-[170px] sm:w-52 sm:h-72 bg-white/40 border border-white/60 backdrop-blur-md sm:backdrop-blur-xl rounded-3xl sm:rounded-[3rem] shadow-2xl flex items-center justify-center z-20 overflow-hidden will-change-transform"
               >
                 <img src={cardImg} alt="Plastic Waste" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                 <div className="relative z-10 text-emerald-900/40 text-[10px] sm:text-xs font-black uppercase tracking-widest text-center px-2 sm:px-4">
@@ -203,7 +203,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   rotateZ: [2, -2, 2],
                 } : {}}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute top-8 right-0 sm:top-[8%] sm:right-[18%] w-[110px] h-[160px] sm:w-48 sm:h-64 bg-white/10 border border-white/30 backdrop-blur-lg rounded-2xl sm:rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center gap-1 z-10 overflow-hidden"
+                className="absolute top-8 right-0 sm:top-[8%] sm:right-[18%] w-[110px] h-[160px] sm:w-48 sm:h-64 bg-white/10 border border-white/30 backdrop-blur-sm sm:backdrop-blur-lg rounded-2xl sm:rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center gap-1 z-10 overflow-hidden will-change-transform"
               >
                 <img src={insightImg} alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                 <Activity className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-400 relative z-10 block" />
@@ -230,7 +230,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                   rotateZ: [2, -2, 2],
                 } : {}}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-4 right-0 sm:bottom-[15%] sm:right-[6%] w-[180px] h-[180px] sm:w-80 sm:h-80 bg-emerald-950 dark:bg-emerald-600/90 border border-emerald-800/50 backdrop-blur-2xl rounded-3xl sm:rounded-[3.5rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30 overflow-hidden"
+                className="absolute bottom-4 right-0 sm:bottom-[15%] sm:right-[6%] w-[180px] h-[180px] sm:w-80 sm:h-80 bg-emerald-950 dark:bg-emerald-600/90 border border-emerald-800/50 backdrop-blur-md sm:backdrop-blur-2xl rounded-3xl sm:rounded-[3.5rem] shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-4 z-30 overflow-hidden will-change-transform"
               >
                 <img src={resultImg} alt="Eco Art Piece" className="absolute inset-0 w-full h-full object-cover opacity-70" />
                 <div className="relative z-10 flex flex-col items-center gap-2">
