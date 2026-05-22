@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { GoogleGenAI, Type } from "@google/genai";
+import React, { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from "motion/react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import LandingPage from './LandingPage';
+const LandingPageLazy = lazy(() => import('./LandingPage'));
+import LazyChart from './components/LazyChart';
 import DarkModeToggle from './DarkModeToggle';
 import confetti from 'canvas-confetti';
 import { 
@@ -78,9 +78,8 @@ const MILESTONES = [
   { name: "Eco Master", threshold: 500, icon: <Trophy className="w-5 h-5" /> },
 ];
 
-// --- AI Initialization ---
-const aiOptions = { apiKey: process.env.GEMINI_API_KEY || '' };
-const ai = new GoogleGenAI(aiOptions);
+// --- AI Initialization (Lazy loaded) ---
+// AI is loaded dynamically only when analyzeWaste is called
 
 interface WasteBank {
   id: string;
@@ -221,6 +220,10 @@ export default function App() {
           "description": "..."
         }
       }`;
+
+      // Lazy load AI SDK only when analyze is triggered
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
       const generateResult = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -450,7 +453,15 @@ export default function App() {
   }, [history]);
 
   if (!isStarted) {
-    return <LandingPage onStart={() => setIsStarted(true)} />;
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full border-4 border-emerald-200 border-t-emerald-600 animate-spin" />
+        </div>
+      }>
+        <LandingPageLazy onStart={() => setIsStarted(true)} />
+      </Suspense>
+    );
   }
 
   return (
@@ -829,35 +840,7 @@ export default function App() {
                        <h3 className="text-2xl font-bold font-serif text-emerald-950 dark:text-emerald-50 italic">Dampak Ekologismu</h3>
                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Pertumbuhan jumlah limbah yang berhasil dialihkan (Gram)</p>
                      </div>
-                     <div className="w-full" style={{ height: 256 }}>
-                       <ResponsiveContainer width="100%" height="100%">
-                         <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                           <defs>
-                             <linearGradient id="colorWaste" x1="0" y1="0" x2="0" y2="1">
-                               <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                               <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                             </linearGradient>
-                           </defs>
-                           <XAxis 
-                             dataKey="date" 
-                             axisLine={false} 
-                             tickLine={false} 
-                             tick={{ fontSize: 10, fill: '#94a3b8' }} 
-                             dy={10}
-                           />
-                           <YAxis 
-                             axisLine={false} 
-                             tickLine={false} 
-                             tick={{ fontSize: 10, fill: '#94a3b8' }} 
-                           />
-                           <Tooltip 
-                             contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', padding: '12px 16px' }}
-                             itemStyle={{ color: '#064e3b', fontWeight: 'bold' }}
-                           />
-                           <Area type="monotone" dataKey="waste" name="Gram Sampah Dialihkan" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorWaste)" />
-                         </AreaChart>
-                       </ResponsiveContainer>
-                     </div>
+                     <LazyChart data={chartData} />
                    </div>
                    
                    <div className="grid gap-6">
