@@ -1,20 +1,10 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+🚀 Transforming Trash into Treasure with AI! 🌍
 
-# Run and deploy your AI Studio app
+Ever wondered what to do with the used items lying around you? Introducing VibeCycle, a smart web-based assistant designed to help us make the best decisions in managing household waste.
 
-This contains everything you need to run your app locally.
+In an era where environmental sustainability is more crucial than ever, I built VibeCycle by combining two powerful computing forces:
 
-View your app in AI Studio: https://ai.studio/apps/57cc9d4c-76cd-49ce-b26a-0a286ef6cfbf
+🔍 Smart Detection (Gemini AI): With just a single snap, VibeCycle can detect the type of waste material in real-time and analyze its potential.
+📊 Decision Support System (SAW Method): Beyond detection, the Simple Additive Weighting (SAW) algorithm behind this app calculates benefit criteria (such as creativity, sale value, and ease of creation) to provide the most valuable and optimal upcycled product recommendations.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+From plastic bottles to used cardboard, VibeCycle is here to prove that small, data-driven steps can make a massive impact on the earth.
